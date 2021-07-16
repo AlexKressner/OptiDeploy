@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: ./project
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    volumes:
+      - ./project:/usr/src/app
+    ports:
+      - 8004:8000
+    environment:
+      - ENVIRONMENT=dev
+      - TESTING=0
+      - CONNECTION=mongodb://mongo:optideploy@mongodb:27017
+      - DATABASE=web_dev
+    depends_on:   
+      - mongodb
+  
+  mongodb:
+    build:
+      context: ./project/db
+      dockerfile: Dockerfile
+    expose:
+      - 27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mongo
+      - MONGO_INITDB_ROOT_PASSWORD=optideploy
