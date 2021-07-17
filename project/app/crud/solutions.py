@@ -1,4 +1,4 @@
-# project/app/api/solutions_crud.py
+# project/app/crud/solutions.py
 
 from typing import Union, List
 from db.mongodb import AsyncIOMotorDatabase
