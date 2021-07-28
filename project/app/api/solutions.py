@@ -5,67 +5,36 @@ from typing import List
 
 from app.crud import solutions as crud
 from app.crud.instances import get as instance_crud_get
-from app.optimizer.model import OptimizationModel, ProblemData
-from app.optimizer.solver import SCIPParameters, Solver
 from bson.objectid import ObjectId
 from db.mongodb import AsyncIOMotorDatabase, get_database
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
+from app.optimizer.solver import SCIPParameters
 
+from celery.result import AsyncResult
+from app.worker import optimization
 from app.models.solutions import (  # isort:skip
-    OptimizeResponseSchema,
+    TaskResponseSchema,
     SolutionSchema,
     DeleteResponseSchema,
+    OptimizeResponseSchema,
 )
 
 
 router = APIRouter()
 
 
-# function to build and optimize model instance and save to db as background task
-async def optimization(
-    solution_id: str,
-    instance_id: str,
-    data: ProblemData,
-    payload: SCIPParameters,
-    db: AsyncIOMotorDatabase,
-) -> SolutionSchema:
-    instance = OptimizationModel(**data)
-    model = instance.generate_model()
-    solver = Solver(model)
-    solver.setParams(payload)
-    start_solve = datetime.utcnow()
-    solver.run()
-    solution = {
-        "_id": ObjectId(solution_id),
-        "linked_instance_id": ObjectId(instance_id),
-        "solve_started_at": start_solve,
-        "solved_at": datetime.utcnow(),
-        "status": solver.model.getStatus(),
-        "scip_parameters": jsonable_encoder(payload) if payload is not None else None,
-        "objective_function_value": solver.model.getObjVal(),
-        "solution_time": solver.model.getSolvingTime(),
-        "gap": solver.model.getGap(),
-        "decision_variables": {
-            var.name: solver.model.getVal(var) for var in solver.model.getVars()
-        },
-    }
-    await db["solution_collection"].replace_one(
-        {"_id": ObjectId(solution_id)}, solution, True
-    )
-
-
-@router.post("/{instance_id}/", status_code=202, response_model=OptimizeResponseSchema)
+@router.post("/{instance_id}/", status_code=202, response_model=TaskResponseSchema)
 async def solve_instance(
     instance_id: str,
     background_tasks: BackgroundTasks,
     payload: SCIPParameters = None,
     db: AsyncIOMotorDatabase = Depends(get_database),
-) -> OptimizeResponseSchema:
+) -> TaskResponseSchema:
     instance = await instance_crud_get(instance_id, db)
     if not instance:
         raise HTTPException(
-            status_code=404, detail=f"No problem instance found with _id={instance_id}!"
+            status_code=404, detail=f"No problem instance found with _id={instance_id} !"
         )
 
     data = {
@@ -73,16 +42,23 @@ async def solve_instance(
         for key in instance
         if key not in ["_id", "created_at", "instance_name", "comment"]
     }
-    solution_id = await crud.post(instance_id, db)
-    background_tasks.add_task(
-        optimization,
-        solution_id=solution_id,
+    optimization_task = optimization.delay(
         instance_id=instance_id,
         data=data,
-        payload=payload,
-        db=db,
+        payload=jsonable_encoder(payload)
     )
-    return {"_id": solution_id, "linked_instance_id": instance_id}
+    return {"task_id": optimization_task.id}
+
+
+@router.get("/tasks/{task_id}", response_model=OptimizeResponseSchema)
+def get_status(task_id) -> OptimizeResponseSchema:
+    task_result = AsyncResult(task_id)
+    result = {
+        "task_id": task_id,
+        "task_status": task_result.status,
+        "task_result": task_result.result
+    }
+    return result 
 
 
 @router.get("/by_solution_id/{solution_id}/", response_model=SolutionSchema)
@@ -92,7 +68,7 @@ async def get_by_solution_id(
     solution = await crud.get_solution_by_solution_id(solution_id, db)
     if not solution:
         raise HTTPException(
-            status_code=404, detail=f"No solution found with _id={solution_id}!"
+            status_code=404, detail=f"No solution found with _id={solution_id} !"
         )
     return solution
 
@@ -105,7 +81,7 @@ async def get_by_instance_id(
     if not solutions:
         raise HTTPException(
             status_code=404,
-            detail=f"No solutions found for instance with _id={instance_id}!",
+            detail=f"No solutions found for instance with _id={instance_id} !",
         )
     return solutions
 
