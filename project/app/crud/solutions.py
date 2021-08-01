@@ -9,11 +9,6 @@ from app.models.solutions import (  # isort:skip
 )
 
 
-async def post(instance_id:str, db) -> str:
-    solution = await db["solution_collection"].insert_one({"linked_instance_id": ObjectId(instance_id)})
-    return str(solution.inserted_id)
-
-
 async def get_solution_by_solution_id(solution_id:str, db) -> Union[SolutionSchema,None]:
     solution = await db["solution_collection"].find_one({"_id": ObjectId(solution_id)})
     if solution:

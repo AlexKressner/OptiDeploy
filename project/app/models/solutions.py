@@ -6,10 +6,14 @@ from typing import Dict, List, Optional
 from pydantic import BaseModel, Field
 
 
-class OptimizeResponseSchema(BaseModel):
-    id: str = Field(..., alias="_id")
-    linked_instance_id: str
 
+class TaskResponseSchema(BaseModel):
+    task_id: str
+
+class OptimizeResponseSchema(BaseModel):
+    task_id: str
+    task_status: str
+    task_result: Optional[Dict]=None
 
 class SolutionSchema(BaseModel):
     id: str = Field(..., alias="_id")

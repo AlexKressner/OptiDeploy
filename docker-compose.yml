@@ -8,13 +8,11 @@ services:
       - ./project:/usr/src/app
     ports:
       - 8004:8000
-    environment:
-      - ENVIRONMENT=dev
-      - TESTING=0
-      - CONNECTION=mongodb://mongo:optideploy@mongodb:27017
-      - DATABASE=web_dev
+    env_file:
+      - ./project/.env
     depends_on:   
       - mongodb
+      - redis
   
   mongodb:
     build:
@@ -25,3 +23,27 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongo
       - MONGO_INITDB_ROOT_PASSWORD=optideploy
+
+  worker:
+    build: ./project
+    command: celery --app=app.main.celery worker --loglevel=info --logfile=app/workers/worker_logs/celery.log
+    env_file:
+      - ./project/.env
+    depends_on:
+      - mongodb
+      - redis
+
+  redis:
+    image: redis:6-alpine
+
+  flower:
+    build: ./project
+    command: sh -c "/usr/src/app/start_flower.sh"
+    ports:
+      - 5556:5555
+    env_file:
+      - ./project/.env
+    depends_on:
+      - redis
+      - worker
+

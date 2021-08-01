@@ -1,16 +1,16 @@
 # project/tests/conftest.py
 
-
 import os
-
 import pytest
 from app import main
 from starlette.testclient import TestClient
 
 
+os.environ["APP_CONFIG"] = "testing"
+
+
 @pytest.fixture(scope="module")
 def test_app():
-    os.environ["DATABASE"] = "web_test"
     with TestClient(main.app) as test_client:
         yield test_client
 
