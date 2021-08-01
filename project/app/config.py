@@ -2,16 +2,15 @@
 
 import os
 from functools import lru_cache
-from motor.motor_asyncio import AsyncIOMotorClient
 
 
 class BaseConfig:
-    CONNECTION: AsyncIOMotorClient = AsyncIOMotorClient(os.environ.get("CONNECTION"))
+    CONNECTION: str = os.environ.get("CONNECTION")
     DATABASE_URL: str = os.environ.get("DATABASE")
     DATABASE_CONNECT_DICT: dict = {}
 
-    CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379")
-    CELERY_RESULT_BACKEND: str = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379")
+    CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL")
+    CELERY_RESULT_BACKEND: str = os.environ.get("CELERY_RESULT_BACKEND")
 
 
 class DevelopmentConfig(BaseConfig):
@@ -23,7 +22,7 @@ class ProductionConfig(BaseConfig):
 
 
 class TestingConfig(BaseConfig):
-    pass
+    DATABASE_URL: str = "web_test"
 
 
 @lru_cache()

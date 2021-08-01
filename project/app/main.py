@@ -2,7 +2,7 @@
 
 
 import logging
-
+from app.workers.celery_utils import create_celery
 from app.api import instances, solutions
 from db.mongodb_utils import close_mongo_connection, init_mongo
 from fastapi import FastAPI
@@ -12,6 +12,7 @@ log = logging.getLogger(__name__)
 
 def create_application() -> FastAPI:
     application = FastAPI()
+    application.celery_app = create_celery()
     application.include_router(
         instances.router, prefix="/instances", tags=["instances"]
     )
@@ -22,6 +23,7 @@ def create_application() -> FastAPI:
 
 
 app = create_application()
+celery = app.celery_app
 
 
 app.add_event_handler("startup", init_mongo)

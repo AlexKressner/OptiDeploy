@@ -26,9 +26,7 @@ services:
 
   worker:
     build: ./project
-    command: celery --app=app.worker.celery worker --loglevel=info --logfile=app/worker_logs/celery.log
-    volumes: 
-      - ./project:/usr/src/app
+    command: celery --app=app.main.celery worker --loglevel=info --logfile=app/workers/worker_logs/celery.log
     env_file:
       - ./project/.env
     depends_on:
@@ -38,9 +36,9 @@ services:
   redis:
     image: redis:6-alpine
 
-  dashboard:
+  flower:
     build: ./project
-    command:  celery --app=app.worker.celery --broker=redis://redis:6379/0 flower --port=5555 
+    command: sh -c "/usr/src/app/start_flower.sh"
     ports:
       - 5556:5555
     env_file:
@@ -48,5 +46,4 @@ services:
     depends_on:
       - redis
       - worker
-      - mongodb
 

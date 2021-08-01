@@ -12,7 +12,7 @@ from fastapi.encoders import jsonable_encoder
 from app.optimizer.solver import SCIPParameters
 
 from celery.result import AsyncResult
-from app.worker import optimization
+from app.workers.tasks import optimization
 from app.models.solutions import (  # isort:skip
     TaskResponseSchema,
     SolutionSchema,
