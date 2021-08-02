@@ -1,8 +1,8 @@
 
 ## About The Project
-**Serving mathematical optimization models as a web service made easy!** powered by SCIP, FastAPI and mongodb.
+**Serving mathematical optimization models as a web service made easy!** powered by SCIP, FastAPI, mongodb and Celery.
 
-This repository contains a template for building a containerized web services which serves an optimization model build with [SCIP](https://www.scipopt.org/index.php#about), which is currently one of the fastest non-commercial solvers for mixed integer programming (MIP) and mixed integer nonlinear programming (MINLP). Using [FastAPI](https://fastapi.tiangolo.com) optimization models are served as a RESTful API. The backend is powered by mongodb, storing  problem instances from which optimization models are built as well as results of optimization runs which solve an instance. A simple facility location problem is used as an example optimization model.
+This repository contains a template for building a containerized web services which serves an optimization model build with [SCIP](https://www.scipopt.org/index.php#about), which is currently one of the fastest non-commercial solvers for mixed integer programming (MIP) and mixed integer nonlinear programming (MINLP). Using [FastAPI](https://fastapi.tiangolo.com) optimization models are served as a RESTful API. The backend is powered by mongodb and stores problem instances and solutions. Optimizations run as background tasks via [Celery](https://docs.celeryproject.org/en/stable/). A simple facility location problem is used as an example optimization model.
 
 
 
