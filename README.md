@@ -26,7 +26,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 4. Visit http://localhost:8004/docs to see spec of RESTful API via OpenAPI
 
-5. Visit http://localhost:5556 to see flower to monitoring and administrating celery cluster
+5. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
 
 
 
