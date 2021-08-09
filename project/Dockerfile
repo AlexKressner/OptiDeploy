@@ -21,9 +21,7 @@ RUN apt-get update \
   && apt-get clean
 
 COPY ./SCIPOptSuite-7.0.3-Linux-debian.deb .
-RUN dpkg -i SCIPOptSuite-7.0.3-Linux-debian.deb \
-    && rm SCIPOptSuite-7.0.3-Linux-debian.deb
-
+RUN dpkg -i SCIPOptSuite-7.0.3-Linux-debian.deb 
 
 # install python dependencies
 RUN pip install --upgrade pip
@@ -33,6 +31,7 @@ RUN pip install -r requirements.txt
 
 # add app
 COPY . .
+RUN rm SCIPOptSuite-7.0.3-Linux-debian.deb
 
 # add entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
