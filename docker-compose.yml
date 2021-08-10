@@ -21,9 +21,8 @@ services:
       dockerfile: Dockerfile
     expose:
       - 27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=mongo
-      - MONGO_INITDB_ROOT_PASSWORD=optideploy
+    env_file:
+      - ./project/.env
     volumes:
       - mongodbdata:/data/db
 
