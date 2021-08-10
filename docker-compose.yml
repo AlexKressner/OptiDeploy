@@ -13,6 +13,7 @@ services:
     depends_on:   
       - mongodb
       - redis
+      - rabbitmq
   
   mongodb:
     build:
@@ -34,9 +35,15 @@ services:
     depends_on:
       - mongodb
       - redis
+      - rabbitmq
 
   redis:
     image: redis:6-alpine
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    env_file:
+      - ./project/.env
 
   flower:
     build: ./project
@@ -48,6 +55,7 @@ services:
     depends_on:
       - redis
       - worker
+      - rabbitmq
 
 volumes: 
   mongodbdata:
