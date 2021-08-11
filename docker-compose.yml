@@ -43,6 +43,9 @@ services:
     image: rabbitmq:3.8-management-alpine
     env_file:
       - ./project/.env
+    ports:
+      - 5672:5672
+      - 15672:15672
 
   flower:
     build: ./project

@@ -28,6 +28,8 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 5. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
 
+6. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
+
 
 
 ## Serving your own model
