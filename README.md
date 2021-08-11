@@ -31,6 +31,8 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 6. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
 
+## Deployment with docker swarm
+tbd
 
 ## Serving your own model
 Easy, just define your model in the [model.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer) file.
