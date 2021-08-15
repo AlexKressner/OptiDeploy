@@ -31,8 +31,39 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 6. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
 
-## Deployment with docker swarm
-tbd
+## Deployment to DigitalOcean with docker swarm
+
+1. Create an account on Docker Hub, if you don't already have one, and then log in:
+  ```sh
+    docker login
+  ```
+2. Build, tag and push the images to Docker Hub:
+  ```sh
+    docker build -t [your docker hub namespace]/optideploy_base:latest -f ./project/Dockerfile ./project
+    docker build -t [your docker hub namespace]/optideploy_db:latest -f ./project/db/Dockerfile ./project/db
+
+    docker push [your docker hub namespace]/optideploy_base:latest
+    docker push [your docker hub namespace]/optideploy_db:latest
+  ```
+3. Sign up for a DigitalOcean account (if you don’t already have one), and then generate an access token so you can access the DigitalOcean API.
+
+4. Add your token:
+  ```sh
+  export DIGITAL_OCEAN_ACCESS_TOKEN=[your_digital_ocean_token]
+  ```
+5. Configure deployment setting (number of nodes, node size, etc., for details see https://slugs.do-api.dev) in deploy.sh and run deploy script:
+  ```sh 
+  sh deploy.sh
+  ```
+6. Fetch IP adress from terminal and test the endpoints
+Visit http://[your ip adress]:8004/docs to see spec of RESTful API via OpenAPI
+Visit http://[your ip adress]:5556 to see flower for monitoring and administrating celery cluster
+Visit http://[your ip adress]:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
+
+7. Bring down the stack and remove the nodes:
+  ```sh 
+  sh remove.sh
+  ```
 
 ## Serving your own model
 Easy, just define your model in the [model.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer) file.
