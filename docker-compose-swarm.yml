@@ -1,0 +1,110 @@
+version: '3.8'
+
+services:
+  web:
+    image: ic230302/optideploy_base:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
+    command: uvicorn app.main:app --reload --workers 1 --host 0.0.0.0 --port 8000
+    ports:
+      - 8004:8000
+    env_file:
+      - ./project/.env
+    depends_on:   
+      - mongodb
+      - redis
+      - rabbitmq
+    networks:
+      - app
+
+  mongodb:
+    image: ic230302/optideploy_db:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == manager]
+    env_file:
+      - ./project/.env
+    volumes:
+      - mongodbdata:/data/db
+    networks:
+      - app
+
+  worker:
+    image: ic230302/optideploy_base:latest
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
+    command: celery --app=app.main.celery worker --loglevel=info --logfile=app/workers/worker_logs/celery.log
+    env_file:
+      - ./project/.env
+    depends_on:
+      - mongodb
+      - redis
+      - rabbitmq
+    networks:
+      - app
+
+  redis:
+    image: redis:6-alpine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
+    networks:
+      - app
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
+    env_file:
+      - ./project/.env
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - app
+
+  flower:
+    image: ic230302/optideploy_base:latest
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints: [node.role == worker]
+    command: sh -c "/usr/src/app/start_flower.sh"
+    ports:
+      - 5556:5555
+    env_file:
+      - ./project/.env
+    depends_on:
+      - redis
+      - worker
+      - rabbitmq
+    networks:
+      - app
+
+networks:
+  app:
+    driver: overlay
+
+volumes: 
+  mongodbdata:
+
