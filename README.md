@@ -71,8 +71,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 Easy, just define your model in the [model.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer) file.
 
 
-## ToDO
-- Adjust deploy.sh to take care of the fact that deployment of droplets sometimes fails 
+## ToDo 
 - Load balancer, security --> e.g. Traefik
 - CI/CD --> e.g. github actions
 - Monitoring --> prometheus (&grafana)
