@@ -4,6 +4,7 @@
 
 This repository contains a template for building a containerized web services which serves an optimization model build with [SCIP](https://www.scipopt.org/index.php#about), which is currently one of the fastest non-commercial solvers for mixed integer programming (MIP) and mixed integer nonlinear programming (MINLP). Using [FastAPI](https://fastapi.tiangolo.com) optimization models are served as a RESTful API. The backend is powered by mongodb and stores problem instances and solutions. Optimizations run as background tasks via [Celery](https://docs.celeryproject.org/en/stable/). A simple facility location problem is used as an example optimization model.
 
+Hopefully, this template helps people to be faster going from an optimization model on a local machine to a simple optimization web service that can be plugged in existing or new applications.
 
 
 ## Getting Started
@@ -65,8 +66,17 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   sh remove.sh
   ```
 
+
 ## Serving your own model
 Easy, just define your model in the [model.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer) file.
+
+
+## ToDO
+- Adjust deploy.sh to take care of the fact that deployment of droplets sometimes fails 
+- Load balancer, security --> e.g. Traefik
+- CI/CD --> e.g. github actions
+- Monitoring --> prometheus (&grafana)
+- general modelling language and solver access --> pyomo
 
 
 
