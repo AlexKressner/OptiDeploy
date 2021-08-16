@@ -55,13 +55,10 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```sh 
   sh deploy.sh
   ```
-6. Fetch IP adress from terminal and test the endpoints
-
-Visit http://[your ip adress]:8004/docs to see spec of RESTful API via OpenAPI
-
-Visit http://[your ip adress]:5556 to see flower for monitoring and administrating celery cluster
-
-Visit http://[your ip adress]:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
+6. Fetch IP adress from terminal and test the endpoints:
+  - http://[your ip adress]:8004/docs to see spec of RESTful API via OpenAPI
+  - http://[your ip adress]:5556 to see flower for monitoring and administrating celery cluster
+  - http://[your ip adress]:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
 7. Bring down the stack and remove the nodes:
   ```sh 
