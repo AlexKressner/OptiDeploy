@@ -1,18 +1,16 @@
 # project/app/api/solutions.py
 
-from datetime import datetime
 from typing import List
 
 from app.crud import solutions as crud
 from app.crud.instances import get as instance_crud_get
-from bson.objectid import ObjectId
+from app.optimizer.solver import SCIPParameters
+from app.workers.tasks import optimization
+from celery.result import AsyncResult
 from db.mongodb import AsyncIOMotorDatabase, get_database
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
-from app.optimizer.solver import SCIPParameters
 
-from celery.result import AsyncResult
-from app.workers.tasks import optimization
 from app.models.solutions import (  # isort:skip
     TaskResponseSchema,
     SolutionSchema,
@@ -34,7 +32,8 @@ async def solve_instance(
     instance = await instance_crud_get(instance_id, db)
     if not instance:
         raise HTTPException(
-            status_code=404, detail=f"No problem instance found with _id={instance_id} !"
+            status_code=404,
+            detail=f"No problem instance found with _id={instance_id} !",
         )
 
     data = {
@@ -43,9 +42,7 @@ async def solve_instance(
         if key not in ["_id", "created_at", "instance_name", "comment"]
     }
     optimization_task = optimization.delay(
-        instance_id=instance_id,
-        data=data,
-        payload=jsonable_encoder(payload)
+        instance_id=instance_id, data=data, payload=jsonable_encoder(payload)
     )
     return {"task_id": optimization_task.id}
 
@@ -56,9 +53,9 @@ def get_status(task_id) -> OptimizeResponseSchema:
     result = {
         "task_id": task_id,
         "task_status": task_result.status,
-        "task_result": task_result.result
+        "task_result": task_result.result,
     }
-    return result 
+    return result
 
 
 @router.get("/by_solution_id/{solution_id}/", response_model=SolutionSchema)

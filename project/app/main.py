@@ -2,8 +2,9 @@
 
 
 import logging
-from app.workers.celery_utils import create_celery
+
 from app.api import instances, solutions
+from app.workers.celery_utils import create_celery
 from db.mongodb_utils import close_mongo_connection, init_mongo
 from fastapi import FastAPI
 

@@ -1,23 +1,18 @@
 # project/app/celery/tasks.py
 
-from celery import shared_task
-import os
+from datetime import datetime
+
+from app.config import settings
 from app.optimizer.model import OptimizationModel, ProblemData
 from app.optimizer.solver import SCIPParameters, Solver
-from datetime import datetime
 from bson.objectid import ObjectId
+from celery import shared_task
 from fastapi.encoders import jsonable_encoder
 from pymongo import MongoClient
-from app.models.solutions import OptimizeResponseSchema
-from app.config import settings
 
 
 @shared_task
-def optimization(
-    instance_id: str,
-    data: ProblemData,
-    payload: SCIPParameters
-):
+def optimization(instance_id: str, data: ProblemData, payload: SCIPParameters):
     instance = OptimizationModel(**data)
     model = instance.generate_model()
     solver = Solver(model)

@@ -1,7 +1,7 @@
 # project/app/celery_utils.py
 
-from celery import current_app as current_celery_app
 from app.config import settings
+from celery import current_app as current_celery_app
 
 
 def create_celery():

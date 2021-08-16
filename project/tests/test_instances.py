@@ -19,7 +19,10 @@ def test_get_instance(test_app, test_data_post):
     assert response_dict["facilities"] == test_data_post["facilities"]
     assert response_dict["transportation_cost"] == test_data_post["transportation_cost"]
     assert response_dict["facility_capacity"] == test_data_post["facility_capacity"]
-    assert response_dict["facility_installation_cost"] == test_data_post["facility_installation_cost"]
+    assert (
+        response_dict["facility_installation_cost"]
+        == test_data_post["facility_installation_cost"]
+    )
     assert response_dict["demand"] == test_data_post["demand"]
     assert response_dict["created_at"]
 

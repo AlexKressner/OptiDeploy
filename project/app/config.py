@@ -30,7 +30,7 @@ def get_settings():
     config_cls_dict = {
         "development": DevelopmentConfig,
         "production": ProductionConfig,
-        "testing": TestingConfig
+        "testing": TestingConfig,
     }
 
     config_name = os.environ.get("APP_CONFIG", "development")
