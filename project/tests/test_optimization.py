@@ -13,8 +13,8 @@ def test_optimality(test_data_optimization):
     solver.set_solver_parameters(parameters)
     solver.solve_instance()
     solution = solver.get_solution_status()
-    assert solution['status'] == "optimal"
-    assert solution['objective_function_value'] == 5610.0
+    assert solution["status"] == "optimal"
+    assert solution["objective_function_value"] == 5610.0
 
 
 def test_no_solver_parameters(test_data_optimization):
@@ -23,5 +23,5 @@ def test_no_solver_parameters(test_data_optimization):
     solver.set_solver_parameters()
     solver.solve_instance()
     solution = solver.get_solution_status()
-    assert solution['status'] == "optimal"
-    assert solution['objective_function_value'] == 5610.0
+    assert solution["status"] == "optimal"
+    assert solution["objective_function_value"] == 5610.0

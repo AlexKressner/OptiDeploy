@@ -1,7 +1,8 @@
 # project/app/optimizer/solver_parameters.py
 
-from pydantic import BaseModel, constr
 from typing import Dict, Optional
+
+from pydantic import BaseModel, constr
 
 
 class SolverParameters(BaseModel):

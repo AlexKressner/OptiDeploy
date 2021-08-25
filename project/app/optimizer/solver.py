@@ -1,18 +1,19 @@
 # project/app/optimizer/solver.py
 
-from pyscipopt import Model, quicksum
-from app.models.solver import SolverInterface
-from app.optimizer.solver_parameters import SolverParameters
-from app.optimizer.data import ProblemData
-from pydantic import PrivateAttr
 from typing import Optional
+
+from app.models.solver import SolverInterface
+from app.optimizer.data import ProblemData
+from app.optimizer.solver_parameters import SolverParameters
+from pydantic import PrivateAttr
+from pyscipopt import Model, quicksum
 
 
 class Solver(SolverInterface, ProblemData):
     # set additional (private) attributes as needed
     _model: str = PrivateAttr()
     _solver_parameters: str = PrivateAttr()
-    
+
     def __init__(self, **data):
         super().__init__(**data)
         self._model = None
@@ -51,7 +52,7 @@ class Solver(SolverInterface, ProblemData):
             "minimize",
         )
 
-    def set_solver_parameters(self, parameters: Optional[SolverParameters]=None):
+    def set_solver_parameters(self, parameters: Optional[SolverParameters] = None):
         if parameters:
             self._solver_parameters = parameters
             if "setBoolParam" in self._solver_parameters:
@@ -83,6 +84,7 @@ class Solver(SolverInterface, ProblemData):
             "number_of_decision_vars": self._model.getNVars(),
             "number_of_constraints": self._model.getNConss(),
             "decision_variables": {
-                var.name: self._model.getVal(var) for var in self._model.getVars()},
-            }
+                var.name: self._model.getVal(var) for var in self._model.getVars()
+            },
+        }
         return solution

@@ -8,7 +8,6 @@ from app.optimizer.solver import Solver
 from app.optimizer.solver_parameters import SolverParameters
 from bson.objectid import ObjectId
 from celery import shared_task
-from fastapi.encoders import jsonable_encoder
 from pymongo import MongoClient
 
 

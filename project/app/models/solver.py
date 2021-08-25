@@ -2,15 +2,16 @@
 
 from abc import ABC, abstractmethod
 from typing import Dict, Optional
+
 from app.optimizer.solver_parameters import SolverParameters
 
 
 # definition of a solver interface which must be followed when implementing custom solvers
 class SolverInterface(ABC):
     @abstractmethod
-    def set_solver_parameters(self, parameters: Optional[SolverParameters]=None):
+    def set_solver_parameters(self, parameters: Optional[SolverParameters] = None):
         """
-        Set parameters (e.g. run time, gap, etc.) to control the behavior of the solver. 
+        Set parameters (e.g. run time, gap, etc.) to control the behavior of the solver.
         """
         pass
 
