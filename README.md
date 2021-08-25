@@ -72,7 +72,7 @@ Easy, just do the following:
 1. Define all the relevant sets and parameters of your problem as a pydantic model in [data.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/models/data.py). This model will also serve to validate data send
 when placing a problem instance.
 2. To control the behavior of your solver define another model in the [solver_parameters.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer/solver_parameters.py). This model will also be used to check solver settings sent via the API.
-3. Finally, implement your solver in [solver.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer/solver_parameters.py).
+3. Finally, implement your solver in [solver.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer/solver.py).
 
 
 ## ToDo 
