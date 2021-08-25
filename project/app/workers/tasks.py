@@ -3,8 +3,9 @@
 from datetime import datetime
 
 from app.config import settings
-from app.optimizer.model import OptimizationModel, ProblemData
-from app.optimizer.solver import SCIPParameters, Solver
+from app.optimizer.data import ProblemData
+from app.optimizer.solver import Solver
+from app.optimizer.solver_parameters import SolverParameters
 from bson.objectid import ObjectId
 from celery import shared_task
 from fastapi.encoders import jsonable_encoder
@@ -12,26 +13,16 @@ from pymongo import MongoClient
 
 
 @shared_task
-def optimization(instance_id: str, data: ProblemData, payload: SCIPParameters):
-    instance = OptimizationModel(**data)
-    model = instance.generate_model()
-    solver = Solver(model)
-    solver.setParams(payload)
+def optimization(instance_id: str, data: ProblemData, payload: SolverParameters):
+    solver = Solver(**data)
+    solver.build_model()
+    solver.set_solver_parameters(payload)
     start_solve = datetime.utcnow()
-    solver.run()
-    solution = {
-        "linked_instance_id": ObjectId(instance_id),
-        "solve_started_at": start_solve,
-        "solved_at": datetime.utcnow(),
-        "status": solver.model.getStatus(),
-        "scip_parameters": jsonable_encoder(payload) if payload is not None else None,
-        "objective_function_value": solver.model.getObjVal(),
-        "solution_time": solver.model.getSolvingTime(),
-        "gap": solver.model.getGap(),
-        "decision_variables": {
-            var.name: solver.model.getVal(var) for var in solver.model.getVars()
-        },
-    }
+    solver.solve_instance()
+    solution = solver.get_solution_status()
+    solution["linked_instance_id"] = ObjectId(instance_id)
+    solution["solve_started_at"] = start_solve
+    solution["solved_at"] = datetime.utcnow()
     client = MongoClient(settings.CONNECTION)
     database = client[settings.DATABASE_URL]
     solution = database["solution_collection"].insert_one(solution)

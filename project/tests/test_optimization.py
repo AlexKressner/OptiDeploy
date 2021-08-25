@@ -1,29 +1,27 @@
 # project/tests/test_optimization.py
 
-from app.optimizer.model import OptimizationModel
 from app.optimizer.solver import Solver
 
 
-def test_modelsize(test_data_optimization):
-    instance = OptimizationModel(**test_data_optimization)
-    model = instance.generate_model()
-    assert model.getNVars() == len(instance.customers) * len(instance.facilities) + len(
-        instance.facilities
-    )
-    assert model.getNConss() == len(instance.customers) + len(
-        instance.facilities
-    ) + len(instance.customers) * len(instance.facilities)
-
-
 def test_optimality(test_data_optimization):
-    instance = OptimizationModel(**test_data_optimization)
-    model = instance.generate_model()
-    solver = Solver(model)
+    solver = Solver(**test_data_optimization)
+    solver.build_model()
     parameters = {
         "setRealParam": {"limits/gap": 0.0},
         "setIntParam": {"conflict/minmaxvars": 0, "conflict/maxlploops": 2},
     }
-    solver.setParams(parameters)
-    solver.run()
-    assert solver.model.getStatus() == "optimal"
-    assert solver.model.getObjVal() == 5610.0
+    solver.set_solver_parameters(parameters)
+    solver.solve_instance()
+    solution = solver.get_solution_status()
+    assert solution['status'] == "optimal"
+    assert solution['objective_function_value'] == 5610.0
+
+
+def test_no_solver_parameters(test_data_optimization):
+    solver = Solver(**test_data_optimization)
+    solver.build_model()
+    solver.set_solver_parameters()
+    solver.solve_instance()
+    solution = solver.get_solution_status()
+    assert solution['status'] == "optimal"
+    assert solution['objective_function_value'] == 5610.0

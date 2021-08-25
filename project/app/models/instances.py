@@ -3,7 +3,7 @@
 from datetime import datetime
 from typing import Optional
 
-from app.optimizer.model import ProblemData, get_schema_extra
+from app.optimizer.data import ProblemData, get_schema_extra
 from pydantic import BaseModel, Field
 
 

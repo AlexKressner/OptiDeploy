@@ -4,7 +4,7 @@ from typing import List
 
 from app.crud import solutions as crud
 from app.crud.instances import get as instance_crud_get
-from app.optimizer.solver import SCIPParameters
+from app.optimizer.solver_parameters import SolverParameters
 from app.workers.tasks import optimization
 from celery.result import AsyncResult
 from db.mongodb import AsyncIOMotorDatabase, get_database
@@ -26,7 +26,7 @@ router = APIRouter()
 async def solve_instance(
     instance_id: str,
     background_tasks: BackgroundTasks,
-    payload: SCIPParameters = None,
+    payload: SolverParameters = None,
     db: AsyncIOMotorDatabase = Depends(get_database),
 ) -> TaskResponseSchema:
     instance = await instance_crud_get(instance_id, db)

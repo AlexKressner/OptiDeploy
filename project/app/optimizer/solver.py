@@ -1,66 +1,95 @@
 # project/app/optimizer/solver.py
 
-from typing import Dict, Optional
-
-from pydantic import BaseModel, constr
-
-
-#####################################################################################
-# Pydantic model for SCIP solver paramters
-# list of paramters for scip solver: https://www.scipopt.org/doc/html/PARAMETERS.php
-#####################################################################################
-class SCIPParameters(BaseModel):
-    setBoolParam: Optional[Dict[str, bool]] = None
-    setIntParam: Optional[Dict[str, int]] = None
-    setRealParam: Optional[Dict[str, float]] = None
-    setCharParam: Optional[Dict[str, constr(min_length=1, max_length=1)]] = None
-    setStringParam: Optional[Dict[str, str]] = None
-
-    class Config:
-        schema_extra = {
-            "example": {
-                "setBoolParam": {
-                    "branching/preferbinary": False,
-                    "branching/delaypscostupdate": True,
-                },
-                "setIntParam": {"conflict/minmaxvars": 0, "conflict/maxlploops": 2},
-                "setRealParam": {"branching/scorefac": 0.167, "branching/clamp": 0.2},
-                "setCharParam": {
-                    "branching/scorefunc": "p",
-                    "branching/lpgainnormalize": "s",
-                },
-                "setStringParam": {
-                    "visual/bakfilename": "-",
-                    "heuristics/undercover/fixingalts": "li",
-                },
-            }
-        }
+from pyscipopt import Model, quicksum
+from app.models.solver import SolverInterface
+from app.optimizer.solver_parameters import SolverParameters
+from app.optimizer.data import ProblemData
+from pydantic import PrivateAttr
+from typing import Optional
 
 
-###############################################
-# SCIP solver
-###############################################
-class Solver:
-    def __init__(self, model):
-        self.model = model
+###################################################################################################
+# Define your own solver in this subclass. Remember to respect the methods set in the metaclass
+# 'SolverInterface'. Solver instances must be initialized by passing the relevant problem
+# data defined in the pydantic model 'ProblemData'. Additional (private) class attributes can be 
+# set as shown in the __init__ method. In general the solver receives dictionaries for problem data 
+# and solver settings, runs an optimization algorithm and returns a solution dictionary
+###################################################################################################
 
-    def setParams(self, parameters: SCIPParameters):
+class Solver(SolverInterface, ProblemData):
+    _model: str = PrivateAttr()
+    _solver_parameters: str = PrivateAttr()
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        self._model = None
+        self._solver_parameters = None
+
+    def build_model(self):
+        self._model = Model("flp")
+        # Define decision variables
+        x, y = {}, {}
+        for j in self.facilities:
+            y[j] = self._model.addVar(vtype="B", name=f"y_{j}")
+            for i in self.customers:
+                x[i, j] = self._model.addVar(vtype="C", name=f"x_{i,j}")
+        # Define constraint set
+        for i in self.customers:
+            self._model.addCons(
+                quicksum(x[i, j] for j in self.facilities) == self.demand[i],
+                f"Demand_{i}",
+            )
+        for j in self.facilities:
+            self._model.addCons(
+                quicksum(x[i, j] for i in self.customers)
+                <= self.facility_capacity[j] * y[j],
+                f"Capacity_{j}",
+            )
+        for (i, j) in x:
+            self._model.addCons(x[i, j] <= self.demand[i] * y[j], f"Strong_{i,j}")
+        # Define objective function
+        self._model.setObjective(
+            quicksum(self.facility_installation_cost[j] * y[j] for j in self.facilities)
+            + quicksum(
+                self.transportation_cost[i][j] * x[i, j]
+                for i in self.customers
+                for j in self.facilities
+            ),
+            "minimize",
+        )
+
+    def set_solver_parameters(self, parameters: Optional[SolverParameters]=None):
         if parameters:
-            if "setBoolParam" in parameters:
-                for key, value in parameters["setBoolParam"].items():
-                    self.model.setBoolParam(key, value)
-            if "setIntParam" in parameters:
-                for key, value in parameters["setIntParam"].items():
-                    self.model.setIntParam(key, value)
-            if "setRealParam" in parameters:
-                for key, value in parameters["setRealParam"].items():
-                    self.model.setRealParam(key, value)
-            if "setCharParam" in parameters:
-                for key, value in parameters["setCharParam"].items():
-                    self.model.setCharParam(key, value)
-            if "setStringParam" in parameters:
-                for key, value in parameters["setStringParam"].items():
-                    self.model.setStringParam(key, value)
+            self._solver_parameters = parameters
+            if "setBoolParam" in self._solver_parameters:
+                for key, value in self._solver_parameters["setBoolParam"].items():
+                    self._model.setBoolParam(key, value)
+            if "setIntParam" in self._solver_parameters:
+                for key, value in self._solver_parameters["setIntParam"].items():
+                    self._model.setIntParam(key, value)
+            if "setRealParam" in self._solver_parameters:
+                for key, value in self._solver_parameters["setRealParam"].items():
+                    self._model.setRealParam(key, value)
+            if "setCharParam" in self._solver_parameters:
+                for key, value in self._solver_parameters["setCharParam"].items():
+                    self._model.setCharParam(key, value)
+            if "setStringParam" in self._solver_parameters:
+                for key, value in self._solver_parameters["setStringParam"].items():
+                    self._model.setStringParam(key, value)
 
-    def run(self):
-        self.model.optimize()
+    def solve_instance(self):
+        self._model.optimize()
+
+    def get_solution_status(self):
+        solution = {
+            "status": self._model.getStatus(),
+            "scip_parameters": self._solver_parameters,
+            "objective_function_value": self._model.getObjVal(),
+            "solution_time": self._model.getSolvingTime(),
+            "gap": self._model.getGap(),
+            "number_of_decision_vars": self._model.getNVars(),
+            "number_of_constraints": self._model.getNConss(),
+            "decision_variables": {
+                var.name: self._model.getVal(var) for var in self._model.getVars()},
+            }
+        return solution
