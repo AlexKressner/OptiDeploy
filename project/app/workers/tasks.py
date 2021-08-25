@@ -3,7 +3,7 @@
 from datetime import datetime
 
 from app.config import settings
-from app.optimizer.data import ProblemData
+from app.models.data import ProblemData
 from app.optimizer.solver import Solver
 from app.optimizer.solver_parameters import SolverParameters
 from bson.objectid import ObjectId

@@ -3,7 +3,7 @@
 from typing import Optional
 
 from app.models.solver import SolverInterface
-from app.optimizer.data import ProblemData
+from app.models.data import ProblemData
 from app.optimizer.solver_parameters import SolverParameters
 from pydantic import PrivateAttr
 from pyscipopt import Model, quicksum
