@@ -4,13 +4,12 @@ from pydantic import BaseModel, constr
 from typing import Dict, Optional
 
 
-##############################################################################################
-# definition of parameters to control the behavior of the solver (e.g. run time, gap, etc.)
-# example: SCIP solver parameters
-# list of parameters for scip solver: https://www.scipopt.org/doc/html/PARAMETERS.php
-##############################################################################################
-
 class SolverParameters(BaseModel):
+    """
+    Definition of parameters to control the behavior of the solver (e.g. run time, gap, etc.).
+    Example with SCIP solver parameters which can be found at https://www.scipopt.org/doc/html/PARAMETERS.php
+    """
+
     setBoolParam: Optional[Dict[str, bool]] = None
     setIntParam: Optional[Dict[str, int]] = None
     setRealParam: Optional[Dict[str, float]] = None

@@ -4,13 +4,12 @@ from typing import Dict, List
 from pydantic import BaseModel
 
 
-#############################################################################################
-# definition of a problem instance with sets and parameters requiered to model the problem 
-# example: facility location problem, see https://scipbook.readthedocs.io/en/latest/flp.html
-#############################################################################################
-
-
 class ProblemData(BaseModel):
+    """
+    Definition of a problem instance with sets and parameters requiered to model the problem.
+    Example: facility location problem, see https://scipbook.readthedocs.io/en/latest/flp.html
+    """
+    
     customers: List[str]
     facilities: List[str]
     transportation_cost: Dict[str, Dict[str, int]]

@@ -8,15 +8,8 @@ from pydantic import PrivateAttr
 from typing import Optional
 
 
-###################################################################################################
-# Define your own solver in this subclass. Remember to respect the methods set in the metaclass
-# 'SolverInterface'. Solver instances must be initialized by passing the relevant problem
-# data defined in the pydantic model 'ProblemData'. Additional (private) class attributes can be 
-# set as shown in the __init__ method. In general the solver receives dictionaries for problem data 
-# and solver settings, runs an optimization algorithm and returns a solution dictionary
-###################################################################################################
-
 class Solver(SolverInterface, ProblemData):
+    # set additional (private) attributes as needed
     _model: str = PrivateAttr()
     _solver_parameters: str = PrivateAttr()
     
