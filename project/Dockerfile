@@ -2,7 +2,11 @@
 FROM python:3.9.2-slim-buster
 
 # set working directory
-WORKDIR /usr/src/app
+ENV APP_HOME=/usr/src/app
+WORKDIR $APP_HOME
+
+# create non-root user
+RUN addgroup --system app && adduser --system --group app
 
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -36,6 +40,12 @@ RUN rm SCIPOptSuite-7.0.3-Linux-debian.deb
 # add entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh
 RUN chmod +x /usr/src/app/start_flower.sh
+
+# chown all the files to the app user
+RUN chown -R app:app $APP_HOME
+
+# change to the app user
+USER app
 
 # run entrypoint.sh
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]

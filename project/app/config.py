@@ -5,7 +5,7 @@ from functools import lru_cache
 import multiprocessing
 
 
-# Gunicorn config
+# Gunicorn config to be loaded
 bind = "0.0.0.0:8000"
 workers = multiprocessing.cpu_count()
 graceful_timeout = 120
