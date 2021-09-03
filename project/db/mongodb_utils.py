@@ -7,7 +7,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 
 async def init_mongo() -> None:
     db.client = AsyncIOMotorClient(settings.CONNECTION)
-    db.database = db.client[settings.DATABASE_URL]
+    db.database = db.client[settings.DATABASE]
 
 
 async def close_mongo_connection() -> None:

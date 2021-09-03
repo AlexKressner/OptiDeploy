@@ -1,12 +1,9 @@
 # project/tests/conftest.py
 
 import os
-
 import pytest
-from app import main
 from starlette.testclient import TestClient
-
-os.environ["APP_CONFIG"] = "testing"
+from app import main
 
 
 @pytest.fixture(scope="module")

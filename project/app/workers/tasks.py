@@ -1,14 +1,13 @@
 # project/app/celery/tasks.py
-
 from datetime import datetime
 
-from app.config import settings
 from app.models.data import ProblemData
 from app.optimizer.solver import Solver
 from app.optimizer.solver_parameters import SolverParameters
 from bson.objectid import ObjectId
 from celery import shared_task
 from pymongo import MongoClient
+from app.config import settings
 
 
 @shared_task
@@ -23,7 +22,7 @@ def optimization(instance_id: str, data: ProblemData, payload: SolverParameters)
     solution["solve_started_at"] = start_solve
     solution["solved_at"] = datetime.utcnow()
     client = MongoClient(settings.CONNECTION)
-    database = client[settings.DATABASE_URL]
+    database = client[settings.DATABASE]
     solution = database["solution_collection"].insert_one(solution)
     client.close()
     return {"_id": str(solution.inserted_id)}

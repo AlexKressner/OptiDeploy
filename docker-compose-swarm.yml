@@ -107,4 +107,3 @@ networks:
 
 volumes: 
   mongodbdata:
-
