@@ -18,7 +18,6 @@ from app.models.solutions import (  # isort:skip
     OptimizeResponseSchema,
 )
 
-
 router = APIRouter()
 
 
@@ -33,7 +32,7 @@ async def solve_instance(
     if not instance:
         raise HTTPException(
             status_code=404,
-            detail=f"No problem instance found with _id={instance_id} !",
+            detail=f"No problem instance found with _id {instance_id} !",
         )
 
     data = {
@@ -67,7 +66,7 @@ async def get_by_solution_id(
     solution = await crud.get_solution_by_solution_id(solution_id, db)
     if not solution:
         raise HTTPException(
-            status_code=404, detail=f"No solution found with _id={solution_id} !"
+            status_code=404, detail=f"No solution found with _id {solution_id} !"
         )
     return solution
 
@@ -80,7 +79,7 @@ async def get_by_instance_id(
     if not solutions:
         raise HTTPException(
             status_code=404,
-            detail=f"No solutions found for instance with _id={instance_id} !",
+            detail=f"No solutions found for instance with _id {instance_id} !",
         )
     return solutions
 
@@ -104,6 +103,6 @@ async def delete_solution(
     _id = await crud.delete(solution_id, db)
     if not _id:
         raise HTTPException(
-            status_code=404, detail=f"Solution with id={_id} not found!"
+            status_code=404, detail=f"Solution with id {_id} not found!"
         )
     return {"_id": _id}

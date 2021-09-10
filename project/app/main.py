@@ -1,14 +1,12 @@
 # project/app/main.py
 
-
-import logging
+from app.logs.logging import configure_loggin
+configure_loggin()
 
 from app.api import instances, solutions
 from app.workers.celery_utils import create_celery
 from db.mongodb_utils import close_mongo_connection, init_mongo
 from fastapi import FastAPI
-
-log = logging.getLogger(__name__)
 
 
 def create_application() -> FastAPI:

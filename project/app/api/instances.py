@@ -2,6 +2,7 @@
 
 from typing import List
 
+
 from app.crud import instances as crud
 from db.mongodb import AsyncIOMotorDatabase, get_database
 from fastapi import APIRouter, Depends, HTTPException
@@ -12,7 +13,6 @@ from app.models.instances import (  # isort:skip
     InstanceSchema,
     DeleteResponseSchema,
 )
-
 
 router = APIRouter()
 
@@ -31,7 +31,7 @@ async def get_instance(
 ) -> GetResponseSchema:
     instance = await crud.get(instance_id, db)
     if not instance:
-        raise HTTPException(status_code=404, detail="Instance not found")
+        raise HTTPException(status_code=404, detail=f"Instance with id {instance_id} not found!")
     return instance
 
 
@@ -54,6 +54,6 @@ async def delete_instance(
     _id = await crud.delete(instance_id, db)
     if not _id:
         raise HTTPException(
-            status_code=404, detail=f"Instance with id={_id} not found!"
+            status_code=404, detail=f"Instance with id {_id} not found!"
         )
     return {"_id": _id}

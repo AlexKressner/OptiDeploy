@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Exit in case of error
+set -e
+
 echo "Setting parameter for deployment..."
 
 NUMBER_DIGITALOCEAN_NODES=2
