@@ -1,3 +1,0 @@
-[2021-09-12 20:46:53] [9] [uvicorn.access: 440] [INFO] 172.19.0.1:62398 - "GET /docs HTTP/1.1" 200
-[2021-09-12 20:46:53] [9] [uvicorn.access: 440] [INFO] 172.19.0.1:62398 - "GET /openapi.json HTTP/1.1" 200
-[2021-09-12 20:47:02] [9] [uvicorn.access: 440] [INFO] 172.19.0.1:62406 - "POST /instances/ HTTP/1.1" 201
