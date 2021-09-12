@@ -35,6 +35,9 @@ def configure_loggin():
             "uvicorn.access": {
                 "propagate": True,
             },
+            "app":{
+                "propagate": True,
+            }
         },
         "root": {
             "handlers": ["verbose","logfile"],
