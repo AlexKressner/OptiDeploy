@@ -1,9 +1,8 @@
 # project/tests/conftest.py
 
-import os
 import pytest
-from starlette.testclient import TestClient
 from app import main
+from starlette.testclient import TestClient
 
 
 @pytest.fixture(scope="module")

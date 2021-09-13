@@ -41,9 +41,7 @@ async def solve_instance(
         if key not in ["_id", "created_at", "instance_name", "comment"]
     }
     optimization_task = optimization.delay(
-        instance_id=instance_id, 
-        data=data, 
-        payload=jsonable_encoder(payload)
+        instance_id=instance_id, data=data, payload=jsonable_encoder(payload)
     )
     return {"task_id": optimization_task.id}
 
