@@ -4,4 +4,4 @@ env/
 .vscode/
 .DS_Store/
 celery.log
-optideploy_error.log
+optideploy_info.log
