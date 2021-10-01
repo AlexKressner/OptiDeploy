@@ -2,6 +2,7 @@ __pycache__
 .pytest_cache
 env/
 .vscode/
-.DS_Store/
 celery.log
 optideploy_info.log
+.prod.env
+.DS_Store

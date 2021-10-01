@@ -3,8 +3,6 @@
 import logging
 import logging.config
 
-ERROR_LOG_FILENAME = "./app/logs/optideploy_info.log"
-
 
 def configure_loggin():
     LOGGING_CONFIG = {
@@ -19,13 +17,7 @@ def configure_loggin():
         },
         # defining how to handle the log messages
         "handlers": {
-            "logfile": {  # handler name
-                "formatter": "default",  # Refer to the formatter defined above
-                "class": "logging.FileHandler",  # use a specific filehandler class
-                "level": "INFO",  # FILTER: Only ERROR, CRITICAL and INFO logs, i.e. no DEBUG messages,
-                "filename": ERROR_LOG_FILENAME,
-            },
-            "verbose": {
+            "verbose": { #handler name
                 "formatter": "default",  # Refer to the formatter defined above
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",  # stream to console
@@ -37,7 +29,7 @@ def configure_loggin():
                 "propagate": True,
             },
         },
-        "root": {"handlers": ["verbose", "logfile"], "level": "DEBUG"},
+        "root": {"handlers": ["verbose"], "level": "DEBUG"},
     }
 
     logging.config.dictConfig(LOGGING_CONFIG)
