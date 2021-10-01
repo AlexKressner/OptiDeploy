@@ -13,7 +13,7 @@ services:
     ports:
       - 8004:8000
     env_file:
-      - ./project/.env
+      - ./project/.prod.env
     depends_on:   
       - mongodb
       - redis
@@ -35,7 +35,7 @@ services:
       placement:
         constraints: [node.role == manager]
     env_file:
-      - ./project/.env
+      - ./project/.prod.env
     volumes:
       - mongodbdata:/data/db
     networks:
@@ -51,7 +51,7 @@ services:
         constraints: [node.role == worker]
     command: celery --app=app.main.celery worker --loglevel=info
     env_file:
-      - ./project/.env
+      - ./project/.prod.env
     depends_on:
       - mongodb
       - redis
@@ -84,7 +84,7 @@ services:
       placement:
         constraints: [node.role == worker]
     env_file:
-      - ./project/.env
+      - ./project/.prod.env
     ports:
       - 5672:5672
       - 15672:15672
@@ -103,7 +103,7 @@ services:
     ports:
       - 5556:5555
     env_file:
-      - ./project/.env
+      - ./project/.prod.env
     depends_on:
       - redis
       - worker
