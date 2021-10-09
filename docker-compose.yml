@@ -14,6 +14,11 @@ services:
       - mongodb
       - redis
       - rabbitmq
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
+        tag: "{{.Name}}/{{.ID}}"
   
   mongodb:
     build:
@@ -28,13 +33,18 @@ services:
 
   worker:
     build: ./project
-    command: celery --app=app.main.celery worker --loglevel=info --logfile=app/workers/worker_logs/celery.log
+    command: celery --app=app.main.celery worker --loglevel=info 
     env_file:
       - ./project/.env
     depends_on:
       - mongodb
       - redis
       - rabbitmq
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
+        tag: "{{.Name}}/{{.ID}}"
 
   redis:
     image: redis:6-alpine

@@ -19,10 +19,10 @@ services:
       - redis
       - rabbitmq
     logging:
-          driver: syslog
-          options:
-            syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
-            tag: "{{.Name}}/{{.ID}}"
+      driver: syslog
+      options:
+        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
+        tag: "{{.Name}}/{{.ID}}"
     networks:
       - app
 
