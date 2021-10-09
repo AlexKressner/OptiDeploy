@@ -19,17 +19,21 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```sh
     cd OptiDeploy
   ```
+3. Sign up for Papertrail with a free plan and add the service "app log files" (LINUX/UNIX) for professional Log-management. You will get a host and port (HOST.papertrailapp.com:PORT) which you should (permanently) add as an environment variable on your machine.
+  ```sh
+    export PAPERTRAIL_URL=HOST.papertrailapp.com:PORT
+  ```
 
-3. Build and launch with docker-compose
+4. Build and launch with docker-compose
   ```sh
     docker-compose up -d --build
   ```
 
-4. Visit http://localhost:8004/docs to see spec of RESTful API via OpenAPI
+5. Visit http://localhost:8004/docs to see spec of RESTful API via OpenAPI
 
-5. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
+6. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
 
-6. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
+7. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
 
 ## Deployment to DigitalOcean with docker swarm
