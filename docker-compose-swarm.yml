@@ -4,6 +4,7 @@ services:
   web:
     image: ic230302/optideploy_base:latest
     deploy:
+      mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -13,7 +14,7 @@ services:
     ports:
       - 8004:8000
     env_file:
-      - ./project/.prod.env
+      - ./project/.env
     depends_on:   
       - mongodb
       - redis
@@ -29,13 +30,14 @@ services:
   mongodb:
     image: ic230302/optideploy_db:latest
     deploy:
+      mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
       placement:
         constraints: [node.role == manager]
     env_file:
-      - ./project/.prod.env
+      - ./project/.env
     volumes:
       - mongodbdata:/data/db
     networks:
@@ -44,6 +46,7 @@ services:
   worker:
     image: ic230302/optideploy_base:latest
     deploy:
+      mode: replicated
       replicas: 2
       restart_policy:
         condition: on-failure
@@ -51,7 +54,7 @@ services:
         constraints: [node.role == worker]
     command: celery --app=app.main.celery worker --loglevel=info
     env_file:
-      - ./project/.prod.env
+      - ./project/.env
     depends_on:
       - mongodb
       - redis
@@ -67,6 +70,7 @@ services:
   redis:
     image: redis:6-alpine
     deploy:
+      mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -78,13 +82,14 @@ services:
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
     deploy:
+      mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
     env_file:
-      - ./project/.prod.env
+      - ./project/.env
     ports:
       - 5672:5672
       - 15672:15672
@@ -94,6 +99,7 @@ services:
   flower:
     image: ic230302/optideploy_base:latest
     deploy:
+      mode: replicated
       replicas: 1
       restart_policy:
         condition: on-failure
@@ -103,7 +109,7 @@ services:
     ports:
       - 5556:5555
     env_file:
-      - ./project/.prod.env
+      - ./project/.env
     depends_on:
       - redis
       - worker
