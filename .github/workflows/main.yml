@@ -10,12 +10,10 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2.3.4
-      - name: Build images
-        run: docker-compose -f docker-compose.yml build
-      - name: Build images
-        run: docker-compose ps
+      - name: Spin up containers
+        run: docker-compose up -d --build
       - name: Pytest
-        run: docker-compose exec optideploy_web python -m pytest .
+        run: docker-compose exec web python -m pytest .
       # - name: Push images
       #   run: |
       #     docker push ${{ env.WEB_IMAGE }}:latest
