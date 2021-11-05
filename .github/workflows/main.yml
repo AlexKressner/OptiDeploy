@@ -17,8 +17,8 @@ jobs:
         run: docker-compose up -d --build
       - name: Show containers
         run: docker ps
-      #- name: Pytest
-      #  run: docker exec web python -m pytest .
+      - name: Pytest
+        run: docker-compose exec -T web python -m pytest .
       # - name: Push images
       #   run: |
       #     docker push ${{ env.WEB_IMAGE }}:latest
