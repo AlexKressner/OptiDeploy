@@ -19,7 +19,9 @@ jobs:
         run: docker ps
       - name: Pytest
         run: docker-compose exec -T web python -m pytest .
-      # - name: Push images
-      #   run: |
-      #     docker push ${{ env.WEB_IMAGE }}:latest
-      #     docker push ${{ env.DB_IMAGE }}:latest
+      - name: Flake8
+        run: docker exec -it web python -m flake8 --max-line-length 199
+      - name: Black
+        run: docker exec -it web python -m black . --check
+      - name: isort
+        run: docker exec -it web python -m isort . --check-only
