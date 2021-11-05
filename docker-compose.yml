@@ -14,11 +14,6 @@ services:
       - mongodb
       - redis
       - rabbitmq
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
-        tag: "{{.Name}}/{{.ID}}"
   
   mongodb:
     build:
@@ -40,11 +35,7 @@ services:
       - mongodb
       - redis
       - rabbitmq
-    logging:
-      driver: syslog
-      options:
-        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
-        tag: "{{.Name}}/{{.ID}}"
+
 
   redis:
     image: redis:6-alpine
