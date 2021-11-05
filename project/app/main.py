@@ -1,6 +1,7 @@
 # project/app/main.py
 
 from app.logs.logging import configure_loggin
+
 configure_loggin()
 
 from app.api import instances, solutions

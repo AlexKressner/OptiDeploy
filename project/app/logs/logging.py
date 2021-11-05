@@ -17,7 +17,7 @@ def configure_loggin():
         },
         # defining how to handle the log messages
         "handlers": {
-            "verbose": { #handler name
+            "verbose": {  # handler name
                 "formatter": "default",  # Refer to the formatter defined above
                 "class": "logging.StreamHandler",
                 "stream": "ext://sys.stdout",  # stream to console

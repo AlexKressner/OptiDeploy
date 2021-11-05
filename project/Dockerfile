@@ -1,5 +1,5 @@
 # pull official base image
-FROM python:3.9.2-slim-buster
+FROM python:3.9.7-slim-buster
 
 # set working directory
 ENV APP_HOME=/usr/src/app
@@ -25,17 +25,16 @@ RUN apt-get update \
   && apt-get clean
 
 COPY ./SCIPOptSuite-7.0.3-Linux-debian.deb .
-RUN dpkg -i SCIPOptSuite-7.0.3-Linux-debian.deb 
+RUN dpkg -i SCIPOptSuite-7.0.3-Linux-debian.deb \
+  && rm SCIPOptSuite-7.0.3-Linux-debian.deb
 
 # install python dependencies
 RUN pip install --upgrade pip
-RUN pip install pyscipopt==3.2.1
 COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
 # add app
 COPY . .
-RUN rm SCIPOptSuite-7.0.3-Linux-debian.deb
 
 # add entrypoint.sh
 RUN chmod +x /usr/src/app/entrypoint.sh

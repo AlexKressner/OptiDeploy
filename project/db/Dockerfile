@@ -1,2 +1,3 @@
 # pull base image
-FROM mongo:latest 
+FROM mongo:5.0.3
+ 

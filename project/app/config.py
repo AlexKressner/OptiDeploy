@@ -15,7 +15,7 @@ timeout = 120
 keepalive = 5
 
 
-class Settings():
+class Settings:
     # mongodb settings
     CONNECTION: str = os.environ.get("CONNECTION")
     DATABASE: str = os.environ.get("DATABASE")
