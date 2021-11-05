@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: ic230302/optideploy_base:latest
+    image: ic230302/optideploy_web:latest
     deploy:
       mode: replicated
       replicas: 1
