@@ -16,7 +16,7 @@ jobs:
       - name: Spin up containers
         run: docker-compose up -d --build
       - name: Show containers
-          run: docker ps
+        run: docker ps
       #- name: Pytest
       #  run: docker exec web python -m pytest .
       # - name: Push images
