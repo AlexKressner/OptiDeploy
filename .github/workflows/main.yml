@@ -16,7 +16,7 @@ jobs:
       - name: Spin up containers
         run: docker-compose up -d --build
       - name: Pytest
-        run: docker-compose exec web python -m pytest .
+        run: docker exec web python -m pytest .
       # - name: Push images
       #   run: |
       #     docker push ${{ env.WEB_IMAGE }}:latest
