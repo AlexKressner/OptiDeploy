@@ -2,6 +2,9 @@ name: Continuous Integration
 
 on: [push]
 
+env:
+  PAPERTRAIL_URL: ${{ secrets.PAPERTRAIL_URL }}
+
 jobs:
 
   build:
