@@ -4,11 +4,13 @@ on: [push]
 
 env:
   PAPERTRAIL_URL: ${{ secrets.PAPERTRAIL_URL }}
+  WEB_IMAGE: optideploy_web
+  DB_IMAGE: optideploy_db
 
 jobs:
 
-  build:
-    name: Build, Test and Push Docker Images
+  test:
+    name: Quality Checks and Testing
     runs-on: ubuntu-latest
     steps:
       - name: Checkout master
@@ -35,4 +37,21 @@ jobs:
         run: docker-compose up -d --build
       - name: Run Tests
         run: docker-compose exec -T web python -m pytest .
- 
+
+  push:
+    name: Build and Push Images
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout master
+        uses: actions/checkout@v2
+      - name: Build images
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_NAMESPACE }}/${{env.WEB_IMAGE}}:latest -f ./project/Dockerfile ./project
+          docker build -t ${{ secrets.DOCKERHUB_NAMESPACE }}/${{env.DB_IMAGE}}:latest -f ./project/db/Dockerfile ./project/db
+      - name: Log in to Dockerhub
+        run: echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
+      - name: Push to Dockerhub
+        run: |
+          docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/${{env.WEB_IMAGE}}:latest
+          docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/${{env.DB_IMAGE}}:latest 
