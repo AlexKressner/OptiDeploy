@@ -13,7 +13,7 @@ jobs:
       - name: Build images
         run: docker-compose -f docker-compose.yml build
       - name: Pytest
-        run: docker-compose exec web python -m pytest .
+        run: docker-compose exec optideploy_web python -m pytest .
       # - name: Push images
       #   run: |
       #     docker push ${{ env.WEB_IMAGE }}:latest
