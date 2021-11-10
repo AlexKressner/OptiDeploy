@@ -10,6 +10,14 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
     command: gunicorn -k uvicorn.workers.UvicornWorker -c app/config.py app.main:app
     ports:
       - 8004:8000
@@ -24,6 +32,8 @@ services:
       options:
         syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
         tag: "{{.Name}}/{{.ID}}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
     networks:
       - app
 
@@ -40,6 +50,13 @@ services:
       - ./project/.env
     volumes:
       - mongodbdata:/data/db
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
+        tag: "{{.Name}}/{{.ID}}"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping')"]
     networks:
       - app
 
@@ -52,6 +69,14 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
     command: celery --app=app.main.celery worker --loglevel=info
     env_file:
       - ./project/.env
@@ -64,6 +89,8 @@ services:
       options:
         syslog-address: "tcp+tls://${PAPERTRAIL_URL}"
         tag: "{{.Name}}/{{.ID}}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
     networks:
       - app
 
@@ -76,6 +103,14 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+    update_config:
+      parallelism: 1
+      order: start-first
+      failure_action: rollback
+      delay: 5s
+    rollback_config:
+      parallelism: 0
+      order: stop-first
     networks:
       - app
 
@@ -105,6 +140,14 @@ services:
         condition: on-failure
       placement:
         constraints: [node.role == worker]
+      update_config:
+        parallelism: 1
+        order: start-first
+        failure_action: rollback
+        delay: 5s
+      rollback_config:
+        parallelism: 0
+        order: stop-first
     command: sh -c "/usr/src/app/start_flower.sh"
     ports:
       - 5556:5555
@@ -114,6 +157,8 @@ services:
       - redis
       - worker
       - rabbitmq
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
     networks:
       - app
 

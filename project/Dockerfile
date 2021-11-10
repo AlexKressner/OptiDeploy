@@ -22,6 +22,7 @@ RUN apt-get update \
               libgmpxx4ldbl libgsl23 \
               libgslcblas0 liblapack3\
               libopenblas-base libtbb2\
+              curl\
   && apt-get clean
 
 COPY ./SCIPOptSuite-7.0.3-Linux-debian.deb .
