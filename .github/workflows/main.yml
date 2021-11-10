@@ -73,6 +73,7 @@ jobs:
           ssh-keyscan ${{ secrets.SERVER_IPV4 }} >> ~/.ssh/known_hosts
           ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
           ssh root@${{ secrets.SERVER_IPV4 }} whoami 
+          scp ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}
 
       
       
