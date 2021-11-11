@@ -9,7 +9,7 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.role == worker]
+        constraints: [node.role == manager]
       update_config:
         parallelism: 1
         order: start-first

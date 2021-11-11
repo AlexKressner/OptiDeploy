@@ -37,6 +37,8 @@ jobs:
         run: docker-compose up -d --build
       - name: Run Tests
         run: docker-compose exec -T web python -m pytest .
+      - name: Show 
+        run: echo ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$GITHUB_REF_NAME
 
 
   build:
@@ -82,8 +84,8 @@ jobs:
           echo DB_IMAGE=${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$GITHUB_REF_NAME >> .env
       - name: Copy files and update stack
         run: |
-          scp ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
-          ssh root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
+          scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
             source .env
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
             docker pull $WEB_IMAGE
