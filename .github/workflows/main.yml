@@ -15,13 +15,22 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
-      - name: executing remote ssh commands using ssh key
+      - name: Copy .env and stack to manager node via scp
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IPV4 }}
+          username: root
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "./.env, ./docker-compose-swarm.yml"
+          target: "~"
+      - name: Update the stack on manager node via ssh
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.SERVER_IPV4 }}
           username: root
           key: ${{ secrets.PRIVATE_KEY }}
-          script: whoami
+          script: |
+            source .env
       - name: Setup python
         uses: actions/setup-python@v2
         with:
@@ -74,26 +83,28 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
-      - name: ssh in to swarm manager node
-        env:
-          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
-        run: |
-          mkdir -p ~/.ssh
-          ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
       - name: Set environment variables
         run: |
           echo PAPERTRAIL_URL=$PAPERTRAIL_URL >> .env
           echo WEB_IMAGE=${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$GITHUB_REF_NAME >> .env
           echo DB_IMAGE=${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$GITHUB_REF_NAME >> .env
-      - name: Copy files and update stack
-        run: |
-          scp ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
-          ssh root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
+      - name: Copy .env and stack to manager node via scp
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.SERVER_IPV4 }}
+          username: root
+          key: ${{ secrets.PRIVATE_KEY }}
+          source: "./.env, ./docker-compose-swarm.yml"
+          target: "~"
+      - name: Update the stack on manager node via ssh
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IPV4 }}
+          username: root
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
             source .env
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
             docker pull $WEB_IMAGE
             docker pull $DB_IMAGE
             docker stack deploy --compose-file=docker-compose-swarm.yml optideploy
-          ENDSSH
