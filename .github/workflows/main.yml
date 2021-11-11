@@ -83,8 +83,8 @@ jobs:
           echo DB_IMAGE=${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$GITHUB_REF_NAME >> .env
       - name: Copy files and update stack
         run: |
-          scp  ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
-          ssh root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
+          scp -o StrictHostKeyChecking=no ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
+          ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
             source .env
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
             docker pull $WEB_IMAGE
