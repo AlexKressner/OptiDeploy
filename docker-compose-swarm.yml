@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: ic230302/optideploy_web:latest
+    image: "${WEB_IMAGE}"
     deploy:
       mode: replicated
       replicas: 1
@@ -22,7 +22,7 @@ services:
     ports:
       - 8004:8000
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:   
       - mongodb
       - redis
@@ -38,7 +38,7 @@ services:
       - app
 
   mongodb:
-    image: ic230302/optideploy_db:latest
+    image: "${DB_IMAGE}"
     deploy:
       mode: replicated
       replicas: 1
@@ -47,7 +47,7 @@ services:
       placement:
         constraints: [node.role == manager]
     env_file:
-      - ./project/.env
+      - ./.env
     volumes:
       - mongodbdata:/data/db
     logging:
@@ -61,7 +61,7 @@ services:
       - app
 
   worker:
-    image: ic230302/optideploy_base:latest
+    image: "${WEB_IMAGE}"
     deploy:
       mode: replicated
       replicas: 2
@@ -79,7 +79,7 @@ services:
         order: stop-first
     command: celery --app=app.main.celery worker --loglevel=info
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:
       - mongodb
       - redis
@@ -124,7 +124,7 @@ services:
       placement:
         constraints: [node.role == worker]
     env_file:
-      - ./project/.env
+      - ./.env
     ports:
       - 5672:5672
       - 15672:15672
@@ -132,7 +132,7 @@ services:
       - app
 
   flower:
-    image: ic230302/optideploy_base:latest
+    image: "${WEB_IMAGE}"
     deploy:
       mode: replicated
       replicas: 1
@@ -152,7 +152,7 @@ services:
     ports:
       - 5556:5555
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:
       - redis
       - worker

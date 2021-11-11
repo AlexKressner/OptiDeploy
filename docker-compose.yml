@@ -9,7 +9,7 @@ services:
     ports:
       - 8004:8000
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:   
       - mongodb
       - redis
@@ -22,7 +22,7 @@ services:
     expose:
       - 27017
     env_file:
-      - ./project/.env
+      - ./.env
     volumes:
       - mongodbdata:/data/db
 
@@ -30,7 +30,7 @@ services:
     build: ./project
     command: celery --app=app.main.celery worker --loglevel=info 
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:
       - mongodb
       - redis
@@ -43,7 +43,7 @@ services:
   rabbitmq:
     image: rabbitmq:3.8-management-alpine
     env_file:
-      - ./project/.env
+      - ./.env
     ports:
       - 5672:5672
       - 15672:15672
@@ -54,7 +54,7 @@ services:
     ports:
       - 5556:5555
     env_file:
-      - ./project/.env
+      - ./.env
     depends_on:
       - redis
       - worker
