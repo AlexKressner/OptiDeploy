@@ -84,13 +84,13 @@ jobs:
       - name: Update the stack on manager node via ssh
         uses: appleboy/ssh-action@master
         env:
-          PAPERTRAIL_URL: ${{ env.PAPERTRAIL_URL }}
           WEB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/${{ env.WEB_IMAGE }}:${{ env.DATE }}
           DB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/${{ env.DB_IMAGE }}:${{ env.DATE }}
         with:
           host: ${{ secrets.SERVER_IPV4 }}
           username: root
           key: ${{ secrets.PRIVATE_KEY }}
+          envs: PAPERTRAIL_URL, WEB_IMAGE, DB_IMAGE
           script: |
             export PAPERTRAIL_URL=$PAPERTRAIL_URL
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
