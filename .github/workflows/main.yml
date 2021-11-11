@@ -15,11 +15,6 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
-      - name: Get date
-        run: |
-          echo "DATE=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
-      - name:
-        run: echo $DATE
       - name: Setup python
         uses: actions/setup-python@v2
         with:
@@ -75,6 +70,9 @@ jobs:
     steps:
       - name: Checkout master
         uses: actions/checkout@v2
+      - name: Get date
+        run: |
+          echo "DATE=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
       - name: Copy .env and stack to manager node via scp
         uses: appleboy/scp-action@master
         with:
