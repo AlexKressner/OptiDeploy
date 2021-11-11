@@ -73,7 +73,6 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-keyscan ${{ secrets.SERVER_IPV4 }} >> ~/.ssh/known_hosts
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
       - name: Set environment variables
