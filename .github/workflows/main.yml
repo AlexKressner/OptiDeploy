@@ -37,8 +37,6 @@ jobs:
         run: docker-compose up -d --build
       - name: Run Tests
         run: docker-compose exec -T web python -m pytest .
-      - name: Show 
-        run: echo ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$GITHUB_REF_NAME
 
 
   build:
