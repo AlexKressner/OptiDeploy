@@ -93,6 +93,8 @@ jobs:
           envs: PAPERTRAIL_URL, WEB_IMAGE, DB_IMAGE
           script: |
             export PAPERTRAIL_URL=$PAPERTRAIL_URL
+            export WEB_IMAGE=$WEB_IMAGE
+            export DB_IMAGE=$DB_IMAGE
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
             docker pull $WEB_IMAGE
             docker pull $DB_IMAGE
