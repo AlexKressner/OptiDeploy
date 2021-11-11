@@ -73,7 +73,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-agent -a $SSH_AUTH_SOCK > /dev/null
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-keyscan ${{ secrets.SERVER_IPV4 }} >> ~/.ssh/known_hosts
           ssh-add - <<< "${{ secrets.PRIVATE_KEY }}"
       - name: Set environment variables
         run: |
@@ -82,8 +82,8 @@ jobs:
           echo DB_IMAGE=${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$GITHUB_REF_NAME >> .env
       - name: Copy files and update stack
         run: |
-          scp  -o StrictHostKeyChecking=no -r ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
-          ssh -o StrictHostKeyChecking=no root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
+          scp  ./.env ./docker-compose-swarm.yml root@${{ secrets.SERVER_IPV4 }}:~
+          ssh root@${{ secrets.SERVER_IPV4 }} << 'ENDSSH'
             source .env
             echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
             docker pull $WEB_IMAGE
