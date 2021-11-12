@@ -71,6 +71,33 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```
 
 
+## Setting up CI/CD
+1. ssh in the remote machine ("node-1") which is your swarm manager node:
+  ```sh
+    docker-machine ssh node-1
+  ```
+
+2. Generate private and public ssh keys - do not enter a passphrase:
+  ```sh
+    ssh-keygen
+  ```
+
+3. Copy public key to authorized keys:
+  ```sh
+    cat .ssh/id_rsa.pub >> .ssh/authorized_keys
+  ```
+
+4. Copy private key
+  ```sh
+    cat .ssh/id_rsa
+  ````
+
+5. Add secrets on github
+  - PRIVATE_KEY: your pricate ssh key copied from the manager node
+  - SERVER_IPV4: ip address of the manager node
+
+
+
 ## Serving your own model
 Easy, just do the following:
 1. Define all the relevant sets and parameters of your problem as a pydantic model in [data.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/models/data.py). This model will also serve to validate data send
