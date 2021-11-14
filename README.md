@@ -71,6 +71,10 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```
 
 
+## Continuous Integraion and Delivery with Github actions
+
+
+
 ## Setting up CI/CD
 1. ssh in the remote machine ("node-1") which is your swarm manager node:
   ```sh
@@ -93,8 +97,12 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ````
 
 5. Add secrets on github
-  - PRIVATE_KEY: your pricate ssh key copied from the manager node
+  - PRIVATE_KEY: your private ssh key copied from the manager node
   - SERVER_IPV4: ip address of the manager node
+  - PAPERTRAIL_URL: your papertrail url
+  - DOCKERHUB_NAMESPACE: your dockerhub namespace
+  - DOCKERHUB_ACCESS_TOKEN: your dockerhub access token to push and pull images
+  - DIGITAL_OCEAN_ACCESS_TOKEN: your digitalocean access token to access the droplets
 
 
 
@@ -108,8 +116,6 @@ when placing a problem instance.
 
 ## ToDo 
 - Load balancer, security --> e.g. Traefik
-- CI/CD --> e.g. github actions
-- Monitoring --> prometheus (&grafana)
 
 
 
