@@ -7,6 +7,10 @@ This repository contains a template for building a containerized web services wh
 Hopefully, this template helps people to be faster going from an optimization model on a local machine to a simple optimization web service that can be plugged in existing or new applications.
 
 
+## Architectural Overview
+![](OptiDeployArchitecture.pdf)
+
+
 ## Getting Started
 
 Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) is installed.
