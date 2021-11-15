@@ -8,7 +8,7 @@ Hopefully, this template helps people to be faster going from an optimization mo
 
 
 ## Architectural Overview
-<img src="https://1drv.ms/u/s!An-td0N0aGvds0SQA5-G21HVC-qD">
+<img src="https://user-images.githubusercontent.com/25706472/141779451-1a9b8ce9-0839-4a4d-b670-8d68c63f3f07.png">
 
 ## Getting Started
 
