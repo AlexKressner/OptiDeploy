@@ -75,7 +75,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 
 ## Continuous Integraion and Delivery with Github Actions
-CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/actions). Pushing to branch ```prod``` starts the CD pipeline. Zero Downtime Deployments are realized via Docker Swarm. You can add additional branches for ```staging``` or ```dev``` with minor adujustments.
+CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/actions). The branching workflow follows the so called ["Git Flow"](https://nvie.com/posts/a-successful-git-branching-model/) model. There are two branches with infinite lifetime: ```master``` which contains production code and ```develop``` which contains pre-production code and is merged to ```master``` when finished. Supporting branches (```feature```,```hotfix```, etc.) can be used. Deployments are done with zero downtime by using docker swarm's internal update mechanisms.
 
 
 ## Setting up CI/CD
