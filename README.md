@@ -53,7 +53,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 5. Add your token:
   ```sh
-  export DIGITAL_OCEAN_ACCESS_TOKEN=[your_digital_ocean_token]
+    export DIGITAL_OCEAN_ACCESS_TOKEN=[your_digital_ocean_token]
   ``` 
 6. Sign up for Papertrail with a free plan and add the service "app log files" (LINUX/UNIX) for professional Log-management. You will get a host and port (HOST.papertrailapp.com:PORT) which you should (permanently) add as an environment variable on your machine.
   ```sh
@@ -61,7 +61,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```
 7. Configure deployment setting (number of nodes, node size, etc., for details see https://slugs.do-api.dev) in deploy.sh and docker-compose-swarm.yml (e.g. replicas). Afterwards run deploy script:
   ```sh 
-  sh deploy.sh
+    sh deploy.sh
   ```
 8. Fetch IP adress from terminal and test the endpoints. It might take a minute until everything is setup and running on the server side.
   - [http://[your ip adress]:8004/docs](http://your_ip_adress:8004/docs) to see spec of RESTful API via OpenAPI
@@ -70,12 +70,12 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 9. Bring down the stack and remove the nodes:
   ```sh 
-  sh remove.sh
+    sh remove.sh
   ```
 
 
-## Continuous Integraion and Delivery with Github actions
-
+## Continuous Integraion and Delivery with Github Actions
+CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/actions). Pushing to branch ```prod``` starts the CD pipeline. Zero Downtime Deployments are realized via Docker Swarm. You can add additional branches for ```staging``` or ```dev``` with minor adujustments.
 
 
 ## Setting up CI/CD
