@@ -22,21 +22,17 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```sh
     cd OptiDeploy
   ```
-3. Sign up for Papertrail with a free plan and add the service "app log files" (LINUX/UNIX) for professional Log-management. You will get a host and port (HOST.papertrailapp.com:PORT) which you should (permanently) add as an environment variable on your machine.
-  ```sh
-    export PAPERTRAIL_URL=HOST.papertrailapp.com:PORT
-  ```
 
-4. Build and launch with docker-compose
+3. Build and launch with docker-compose
   ```sh
     docker-compose up -d --build
   ```
 
-5. Visit http://localhost:8004/docs to see spec of RESTful API via OpenAPI
+4. Visit http://localhost:8004/docs to see spec of RESTful API via OpenAPI
 
-6. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
+5. Visit http://localhost:5556 to see flower for monitoring and administrating celery cluster
 
-7. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
+6. Visit http://localhost:15672 and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
 
 ## Deployment to DigitalOcean with docker swarm
@@ -45,30 +41,34 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```sh
     docker login
   ```
-2. Build, tag and push the images to Docker Hub:
+2. Add your Docker Hub namespace:
   ```sh
-    docker build -t [your docker hub namespace]/optideploy_base:latest -f ./project/Dockerfile ./project
-    docker build -t [your docker hub namespace]/optideploy_db:latest -f ./project/db/Dockerfile ./project/db
-
-    docker push [your docker hub namespace]/optideploy_base:latest
-    docker push [your docker hub namespace]/optideploy_db:latest
+    export DOCKERHUB_NAMESPACE=[your_dockerhub_namespace]
   ```
-3. Sign up for a DigitalOcean account (if you don’t already have one), and then generate an access token so you can access the DigitalOcean API.
+3. Run the init script to build and push the images to Docker Hub:
+  ```sh
+    sh init_images.sh
+  ```
+4. Sign up for a DigitalOcean account (if you don’t already have one), and then generate an access token so you can access the DigitalOcean API.
 
-4. Add your token:
+5. Add your token:
   ```sh
   export DIGITAL_OCEAN_ACCESS_TOKEN=[your_digital_ocean_token]
+  ``` 
+6. Sign up for Papertrail with a free plan and add the service "app log files" (LINUX/UNIX) for professional Log-management. You will get a host and port (HOST.papertrailapp.com:PORT) which you should (permanently) add as an environment variable on your machine.
+  ```sh
+    export PAPERTRAIL_URL=HOST.papertrailapp.com:PORT
   ```
-5. Configure deployment setting (number of nodes, node size, etc., for details see https://slugs.do-api.dev) in deploy.sh and docker-compose-swarm.yml (e.g. replicas). Afterwards run deploy script:
+7. Configure deployment setting (number of nodes, node size, etc., for details see https://slugs.do-api.dev) in deploy.sh and docker-compose-swarm.yml (e.g. replicas). Afterwards run deploy script:
   ```sh 
   sh deploy.sh
   ```
-6. Fetch IP adress from terminal and test the endpoints. It might take a minute until everything is setup and running on the server side.
+8. Fetch IP adress from terminal and test the endpoints. It might take a minute until everything is setup and running on the server side.
   - [http://[your ip adress]:8004/docs](http://your_ip_adress:8004/docs) to see spec of RESTful API via OpenAPI
   - [http://[your ip adress]:5556](http://your_ip_adress:5556) to see flower for monitoring and administrating celery cluster
   - [http://[your ip adress]:15672](http://your_ip_adress:15672) and login (user=admin, password=admin) to see the RabbitMQ dashboard
 
-7. Bring down the stack and remove the nodes:
+9. Bring down the stack and remove the nodes:
   ```sh 
   sh remove.sh
   ```
