@@ -75,7 +75,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
 
 
 ## Continuous Integraion and Delivery with Github Actions
-CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/actions). The branching workflow follows the so called ["Git Flow"](https://nvie.com/posts/a-successful-git-branching-model/) model. There are two branches with infinite lifetime: ```master``` which contains production code and ```develop``` which contains pre-production code and is merged to ```master``` when finished. Supporting branches (```feature```,```hotfix```, etc.) can be used. Deployments are done with zero downtime by using docker swarm's internal update mechanisms.
+CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/actions). The branching workflow follows the so called ["Git Flow"](https://nvie.com/posts/a-successful-git-branching-model/) model. There are two branches with infinite lifetime: ```master``` which contains production code and ```develop``` which contains pre-production code and is merged to ```master``` when finished. CI runs for ```develop``` and ```master```. CD runs for ```master``` only. Feel free to use additional supporting branches (```feature```,```hotfix```, etc.). Deployments are done with zero downtime by using docker swarm's internal update mechanisms.
 
 
 ## Setting up CI/CD
@@ -115,16 +115,3 @@ Easy, just do the following:
 when placing a problem instance.
 2. To control the behavior of your solver define another model in the [solver_parameters.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer/solver_parameters.py). This model will also be used to check solver settings sent via the API.
 3. Finally, implement your solver in [solver.py](https://github.com/AlexKressner/OptiDeploy/blob/master/project/app/optimizer/solver.py).
-
-
-## ToDo 
-- Load balancer, security --> e.g. Traefik
-
-
-
-
-
-
-
-
-

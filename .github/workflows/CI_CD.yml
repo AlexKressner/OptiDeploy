@@ -1,9 +1,10 @@
-name: Continuous Deployment to DigitalOcean
+name: Continuous Development and Deployment to DigitalOcean
 
 on:
   push:
     branches:
       - master
+      - develop
 
 env:
   PAPERTRAIL_URL: ${{ secrets.PAPERTRAIL_URL }}
