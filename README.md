@@ -8,8 +8,7 @@ Hopefully, this template helps people to be faster going from an optimization mo
 
 
 ## Architectural Overview
-![](OptiDeployArchitecture.pdf)
-
+<img src="OptiDeployArchitecture.pdf">
 
 ## Getting Started
 
