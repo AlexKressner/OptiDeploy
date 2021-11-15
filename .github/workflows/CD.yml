@@ -1,6 +1,9 @@
 name: Continuous Deployment to DigitalOcean
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
 
 env:
   PAPERTRAIL_URL: ${{ secrets.PAPERTRAIL_URL }}
@@ -8,6 +11,9 @@ env:
   DB_IMAGE: optideploy_db
 
 jobs:
+
+  test:
+    uses: ${{ env.GITHUB_REPOSITORY }}/.github/workflows/CI.yml@master
 
   build:
     name: Build and Push Images
@@ -30,7 +36,6 @@ jobs:
         run: |
           docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$DATE
           docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$DATE 
-
 
   deploy:
     name: Deploy to DigitalOcean
