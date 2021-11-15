@@ -8,7 +8,7 @@ Hopefully, this template helps people to be faster going from an optimization mo
 
 
 ## Architectural Overview
-<img src="images/OptiDeployArchitecture.png">
+<img src="https://1drv.ms/u/s!An-td0N0aGvds0SQA5-G21HVC-qD">
 
 ## Getting Started
 
