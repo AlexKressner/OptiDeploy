@@ -47,7 +47,7 @@ Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.doc
   ```
 3. Run the init script to build and push the images to Docker Hub:
   ```sh
-    sh init_images.sh
+    source init_images.sh
   ```
 4. Sign up for a DigitalOcean account (if you don’t already have one), and then generate an access token so you can access the DigitalOcean API.
 

@@ -24,6 +24,7 @@ class Settings:
     CELERY_BROKER_URL: str = os.environ.get("CELERY_BROKER_URL")
     CELERY_RESULT_BACKEND: str = os.environ.get("CELERY_RESULT_BACKEND")
     CELERY_TASK_TIME_LIMIT: float = os.environ.get("CELERY_TASK_TIME_LIMIT")
-
+    CELERY_WORKER_PREFETCH_MULTIPLIER: float = os.environ.get("CELERY_WORKER_PREFETCH_MULTIPLIER")
+    CELERY_ACKS_LATE: str = os.environ.get("CELERY_ACKS_LATE") #if true mark task as run after task is completed and not before
 
 settings = Settings()

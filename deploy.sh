@@ -8,7 +8,7 @@ echo "Setting parameter for deployment..."
 NUMBER_DIGITALOCEAN_NODES=2
 DIGITALOCEAN_IMAGE=debian-10-x64
 DIGITALOCEAN_REGION=fra1
-DIGITALOCEAN_SIZE=s-1vcpu-1gb
+DIGITALOCEAN_SIZE=s-2vcpu-4gb
 
 
 echo "Spinning up droplets..."

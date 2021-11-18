@@ -9,7 +9,7 @@ services:
       restart_policy:
         condition: on-failure
       placement:
-        constraints: [node.role == manager]
+        constraints: [node.role == worker]
       update_config:
         parallelism: 1
         order: start-first
@@ -89,8 +89,6 @@ services:
       options:
         syslog-address: "tcp+tls://${PAPERTRAIL_URL?Variable PAPERTRAIL not set}"
         tag: "{{.Name}}/{{.ID}}"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
     networks:
       - app
 
@@ -154,7 +152,7 @@ services:
       - worker
       - rabbitmq
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck"]
+      test: ["CMD", "curl", "-f", "http://localhost:5555/healthcheck"]
     networks:
       - app
 
