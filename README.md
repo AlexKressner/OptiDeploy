@@ -107,7 +107,8 @@ CI/CD workflows are implemented via [Github Actions](https://docs.github.com/en/
   - DOCKERHUB_ACCESS_TOKEN: your dockerhub access token to push and pull images
   - DIGITAL_OCEAN_ACCESS_TOKEN: your digitalocean access token to access the droplets
 
-
+## Load testing
+[Loucst](https://docs.locust.io/en/stable/index.html) is used for load testing and runs in a docker container. To test you application ```cd load_testing``` and run ```docker run -p 8089:8089 -v $PWD:/mnt/locust locustio/locust -f /mnt/locust/locustfile.py```. Afterwards, the Locust user interface is available at [http://localhost:8089](http://localhost:8089).
 
 ## Serving your own model
 Easy, just do the following:
