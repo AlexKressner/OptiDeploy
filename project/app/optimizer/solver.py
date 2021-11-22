@@ -75,16 +75,26 @@ class Solver(SolverInterface, ProblemData):
         self._model.optimize()
 
     def get_solution_status(self):
-        solution = {
-            "status": self._model.getStatus(),
-            "scip_parameters": self._solver_parameters,
-            "objective_function_value": self._model.getObjVal(),
-            "solution_time": self._model.getSolvingTime(),
-            "gap": self._model.getGap(),
-            "number_of_decision_vars": self._model.getNVars(),
-            "number_of_constraints": self._model.getNConss(),
-            "decision_variables": {
-                var.name: self._model.getVal(var) for var in self._model.getVars()
-            },
-        }
+        if self._model.getStatus() != "inforunbd":
+            solution = {
+                "status": self._model.getStatus(),
+                "scip_parameters": self._solver_parameters,
+                "objective_function_value": self._model.getObjVal(),
+                "solution_time": self._model.getSolvingTime(),
+                "gap": self._model.getGap(),
+                "number_of_decision_vars": self._model.getNVars(),
+                "number_of_constraints": self._model.getNConss(),
+                "decision_variables": {
+                    var.name: self._model.getVal(var) for var in self._model.getVars()
+                },
+            }
+        else:
+            solution = (
+                {
+                    "status": self._model.getStatus(),
+                    "scip_parameters": self._solver_parameters,
+                    "number_of_decision_vars": self._model.getNVars(),
+                    "number_of_constraints": self._model.getNConss(),
+                },
+            )
         return solution
