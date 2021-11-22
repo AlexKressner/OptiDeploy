@@ -1,8 +1,7 @@
 # load_testing/locust.py
 
-from locust import HttpUser, between, task
-
 from data import ProblemInstance
+from locust import HttpUser, between, task
 
 
 class OptiDeployUser(HttpUser):
