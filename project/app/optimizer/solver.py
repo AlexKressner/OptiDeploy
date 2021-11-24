@@ -75,12 +75,7 @@ class Solver(SolverInterface, ProblemData):
         self._model.optimize()
 
     def get_solution_status(self) -> dict:
-        if self._model.getStatus() == "infeasible":
-            return {
-                "status": self._model.getStatus(),
-                "scip_parameters": self._solver_parameters,
-            }
-        else:
+        if self._model.getStatus() == "optimal":
             return {
                 "status": self._model.getStatus(),
                 "scip_parameters": self._solver_parameters,
@@ -93,3 +88,8 @@ class Solver(SolverInterface, ProblemData):
                     var.name: self._model.getVal(var) for var in self._model.getVars()
                 },
             }
+        else:
+            return {
+                "status": self._model.getStatus(),
+                "scip_parameters": self._solver_parameters,
+                }
