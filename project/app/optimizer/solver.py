@@ -74,9 +74,14 @@ class Solver(SolverInterface, ProblemData):
     def solve_instance(self):
         self._model.optimize()
 
-    def get_solution_status(self):
-        if self._model.getStatus() != "inforunbd":
-            solution = {
+    def get_solution_status(self) -> dict:
+        if self._model.getStatus() == "infeasible":
+            return {
+                "status": self._model.getStatus(),
+                "scip_parameters": self._solver_parameters,
+            }
+        else:
+            return {
                 "status": self._model.getStatus(),
                 "scip_parameters": self._solver_parameters,
                 "objective_function_value": self._model.getObjVal(),
@@ -88,13 +93,3 @@ class Solver(SolverInterface, ProblemData):
                     var.name: self._model.getVal(var) for var in self._model.getVars()
                 },
             }
-        else:
-            solution = (
-                {
-                    "status": self._model.getStatus(),
-                    "scip_parameters": self._solver_parameters,
-                    "number_of_decision_vars": self._model.getNVars(),
-                    "number_of_constraints": self._model.getNConss(),
-                },
-            )
-        return solution

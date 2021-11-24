@@ -41,6 +41,23 @@ def test_run_optimization_task_successful(test_app, test_data_post):
     assert response_dict["task_result"]
 
 
+def test_run_optimization_task_infeasible(test_app, test_data_post_infeasible):
+    response = test_app.post("/instances/", data=json.dumps(test_data_post_infeasible))
+    instance_id = response.json()["_id"]
+    response = test_app.post(f"/solutions/{instance_id}/")
+    response_dict = response.json()
+    task_id = response_dict["task_id"]
+    response = test_app.get(f"/solutions/tasks/{task_id}/")
+    response_dict = response.json()
+
+    while response_dict["task_status"] == "PENDING":
+        response = test_app.get(f"/solutions/tasks/{task_id}/")
+        response_dict = response.json()
+    assert response_dict["task_id"] == task_id
+    assert response_dict["task_status"] == "SUCCESS"
+    assert response_dict["task_result"]
+
+
 def test_get_solution_by_solution_id(test_app, test_data_post):
     response = test_app.post("/instances/", data=json.dumps(test_data_post))
     instance_id = response.json()["_id"]

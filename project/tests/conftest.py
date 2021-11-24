@@ -38,3 +38,17 @@ def test_data_post(test_data_optimization):
         },
         **test_data_optimization,
     }
+
+
+@pytest.fixture(scope="module")
+def test_data_post_infeasible(test_data_optimization):
+    test_data_optimization["facility_capacity"] = {
+        i: 0 for i in test_data_optimization["facilities"]
+    }
+    return {
+        **{
+            "instance_name": "Facility Location",
+            "comment": "Optimization of facility locations for new logistics network",
+        },
+        **test_data_optimization,
+    }
