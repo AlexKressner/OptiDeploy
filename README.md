@@ -10,6 +10,17 @@ Hopefully, this template helps people to be faster going from an optimization mo
 ## Architectural Overview
 <img src="https://user-images.githubusercontent.com/25706472/141779451-1a9b8ce9-0839-4a4d-b670-8d68c63f3f07.png">
 
+[Gunicorn](https://gunicorn.org) is used for managing [Uvicorn](https://www.uvicorn.org/deployment/) workers (ASGI servers), i.e. monitor process aliveness, managing process restarts/ shutdowns and scaling the number of processes. Have a look at this nice [video](https://www.youtube.com/watch?v=WqrCnVAkLIo) explaining Gunicorn.
+
+A full optimization loop looks like this:
+
+1. Send problem data via a post request. The data will be validated against the defined problem instance model and stored  in mongoDB with a unique problem instance ID.
+2. Send a post request including a reference to the problem instance to be solved and appropriate parameters to configure the solver.
+3. The optimization task (problem instance & solver settings) is enqueued until a woker process picks up the task. To build a model instance, the worker process fetches the problem data from mongoDB and starts the optimization with defined solver settings. 
+4. The worker constantly stores the current status of the optimization task in redis, which can be polled.
+5. A successfull optimiation run terminates with task status "SUCCESS" returning a unique solution ID which can be used to fetch the optimition results from monogDB.
+
+
 ## Getting Started
 
 Make sure [Docker](https://www.docker.com) and [Docker Compose](https://docs.docker.com/compose/install/) is installed.
