@@ -92,4 +92,4 @@ class Solver(SolverInterface, ProblemData):
             return {
                 "status": self._model.getStatus(),
                 "scip_parameters": self._solver_parameters,
-                }
+            }
