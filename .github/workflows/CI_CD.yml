@@ -37,8 +37,14 @@ jobs:
         run: bandit .
       - name: safety
         run: safety check
+      - name: Log in to Dockerhub
+        run: echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
+      - name: Pull base images
+        run: |
+          docker pull ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:latest || true
+          docker pull ${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:latest || true
       - name: Spin up containers
-        run: docker-compose up -d --build
+        run: docker-compose up -d
       - name: Run Tests
         run: docker-compose exec -T web python -m pytest .
 
