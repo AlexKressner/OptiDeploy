@@ -8,8 +8,8 @@ on:
 
 env:
   PAPERTRAIL_URL: ${{ secrets.PAPERTRAIL_URL }}
-  WEB_IMAGE: optideploy_web
-  DB_IMAGE: optideploy_db
+  WEB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/optideploy_web
+  DB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/optideploy_db
 
 jobs:
 
@@ -53,16 +53,20 @@ jobs:
       - name: Get date
         run: |
           echo "DATE=$(date '+%Y-%m-%d')" >> $GITHUB_ENV
-      - name: Build images
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$DATE -f ./project/Dockerfile ./project
-          docker build -t ${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$DATE -f ./project/db/Dockerfile ./project/db
       - name: Log in to Dockerhub
         run: echo ${{ secrets.DOCKERHUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_NAMESPACE }} --password-stdin
+      - name: Pull base images
+        run: |
+          docker pull $WEB_IMAGE:latest || true
+          docker pull $DB_IMAGE:latest || true
+      - name: Build images
+        run: |
+          docker build --cache-from $WEB_IMAGE:latest -t $WEB_IMAGE:$DATE -f ./project/Dockerfile ./project
+          docker build --cache-from $DB_IMAGE:latest -t $DB_IMAGE:$DATE -f ./project/db/Dockerfile ./project/db
       - name: Push to Dockerhub
         run: |
-          docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/$WEB_IMAGE:$DATE
-          docker push ${{ secrets.DOCKERHUB_NAMESPACE }}/$DB_IMAGE:$DATE 
+          docker push $WEB_IMAGE:$DATE
+          docker push $DB_IMAGE:$DATE 
 
   deploy:
     name: Deploy to DigitalOcean
@@ -86,8 +90,8 @@ jobs:
       - name: Update the stack on manager node via ssh
         uses: appleboy/ssh-action@master
         env:
-          WEB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/${{ env.WEB_IMAGE }}:${{ env.DATE }}
-          DB_IMAGE: ${{ secrets.DOCKERHUB_NAMESPACE }}/${{ env.DB_IMAGE }}:${{ env.DATE }}
+          WEB_IMAGE: ${{ env.WEB_IMAGE }}:${{ env.DATE }}
+          DB_IMAGE: ${{ env.DB_IMAGE }}:${{ env.DATE }}
         with:
           host: ${{ secrets.SERVER_IPV4 }}
           username: root
