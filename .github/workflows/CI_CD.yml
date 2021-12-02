@@ -2,6 +2,8 @@ name: Continuous Development and Deployment to DigitalOcean
 
 on:
   push:
+    paths-ignore:
+      - "*.md"
     branches:
       - master
       - develop
